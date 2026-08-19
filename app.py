@@ -385,7 +385,7 @@ def chat():
         headers={
             "Cache-Control": "no-cache, no-transform",
             "X-Accel-Buffering": "no",
-        },
+        },)
     
 
 @app.route("/")
