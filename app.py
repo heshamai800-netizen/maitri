@@ -26,12 +26,14 @@ load_dotenv()
 # - Home/health can answer quickly after a Render cold start
 # - Works with any OpenAI-compatible LLM endpoint (Groq/Ollama/etc.)
 # ---------------------------------------------------------
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
+INDEX_PATH = BASE_DIR / "hesham.index"
+METADATA_PATH = BASE_DIR / "metadata.json"
+
 APP_NAME = os.getenv("APP_NAME", "Nihari AI")
-INDEX_PATH = Path(os.getenv("INDEX_PATH", str(BASE_DIR / "data" / "hesham.index")))
-METADATA_PATH = Path(os.getenv("METADATA_PATH", str(BASE_DIR / "data" / "metadata.json")))
 EMBEDDING_MODEL = os.getenv(
     "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
 )
