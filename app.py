@@ -389,7 +389,51 @@ def chat():
             "X-Accel-Buffering": "no",
         },)
     
+@app.route("/debug/models", methods=["GET"])
+def debug_models():
+    try:
+        from openai import OpenAI
 
+        base_url = os.getenv(
+            "LLM_BASE_URL",
+            "https://api.groq.com/openai/v1"
+        ).strip()
+
+        api_key = os.getenv(
+            "LLM_API_KEY",
+            ""
+        ).strip()
+
+        if not api_key:
+            return jsonify({
+                "status": "error",
+                "message": "LLM_API_KEY is not configured"
+            }), 500
+
+        client = OpenAI(
+            api_key=api_key,
+            base_url=base_url
+        )
+
+        models = client.models.list()
+
+        model_ids = sorted([
+            model.id for model in models.data
+        ])
+
+        return jsonify({
+            "status": "success",
+            "base_url": base_url,
+            "total_models": len(model_ids),
+            "models": model_ids
+        })
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": str(e)
+        }), 500
 @app.route("/")
 def index():
     return render_template("index.html")
