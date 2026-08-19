@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nihari AI | Industrial Intelligence</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #080b10;
+            --sidebar: #0d1117;
+            --card: #111820;
+            --border: #26313d;
+            --text: #edf2f7;
+            --muted: #8b98a5;
+            --accent: #f59e0b;
+            --accent2: #fbbf24;
+            --user: #17202a;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 270px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: #000;
+            font-weight: 900;
+            font-size: 22px;
+        }
+
+        .brand h1 {
+            font-size: 19px;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .status {
+            padding: 14px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .status-title {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 9px;
+        }
+
+        .online {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .side-title {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .suggestion {
+            padding: 11px;
+            border-radius: 9px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            border: 1px solid transparent;
+            color: #c8d0d8;
+            transition: 0.2s;
+        }
+
+        .suggestion:hover {
+            border-color: var(--border);
+            background: var(--card);
+            color: white;
+        }
+
+        .footer {
+            margin-top: auto;
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* MAIN */
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 68px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            background: rgba(13,17,23,.8);
+        }
+
+        .topbar h2 {
+            font-size: 15px;
+        }
+
+        .topbar span {
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* CHAT */
+
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px 150px;
+        }
+
+        .chat-inner {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-top: 10vh;
+            padding: 20px;
+        }
+
+        .welcome-logo {
+            width: 65px;
+            height: 65px;
+            margin: auto;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            background: var(--accent);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        .welcome h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .message {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .ai-avatar {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .user-avatar {
+            background: #334155;
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .name {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .text {
+            color: #dce3ea;
+            font-size: 14px;
+            line-height: 1.75;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 7px;
+            height: 16px;
+            background: var(--accent);
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* INPUT */
+
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 270px;
+            right: 0;
+            padding: 20px;
+            background:
+                linear-gradient(
+                    transparent,
+                    var(--bg) 35%
+                );
+        }
+
+        .input-box {
+            max-width: 850px;
+            margin: auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #111820;
+            box-shadow: 0 10px 40px rgba(0,0,0,.25);
+        }
+
+        textarea {
+            flex: 1;
+            resize: none;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 24px;
+            max-height: 130px;
+            padding: 5px;
+        }
+
+        textarea::placeholder {
+            color: #687481;
+        }
+
+        .send {
+            width: 42px;
+            height: 42px;
+            border: none;
+            border-radius: 11px;
+            background: var(--accent);
+            color: #000;
+            cursor: pointer;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .send:hover {
+            background: var(--accent2);
+        }
+
+        .send:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            max-width: 850px;
+            margin: 8px auto 0;
+            text-align: center;
+            color: #59636e;
+            font-size: 10px;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 750px) {
+            .sidebar {
+                display: none;
+            }
+
+            .input-area {
+                left: 0;
+            }
+
+            .chat {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="logo">N</div>
+            <div>
+                <h1>Nihari AI</h1>
+                <p>Industrial Intelligence</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <div class="status-title">SYSTEM STATUS</div>
+
+            <div class="online">
+                <div class="dot"></div>
+                RAG Knowledge Base Online
+            </div>
+        </div>
+
+        <div class="side-title">
+            Suggested Questions
+        </div>
+
+        <div class="suggestion"
+             onclick="askSuggestion('What is a forklift anti collision system?')">
+            Forklift anti-collision system
+        </div>
+
+        <div class="suggestion"
+             onclick="askSuggestion('Explain forklift safety solutions.')">
+            Forklift safety solutions
+        </div>
+
+        <div class="suggestion"
+             onclick="askSuggestion('What industrial safety products are available?')">
+            Industrial safety products
+        </div>
+
+        <div class="suggestion"
+             onclick="askSuggestion('Explain crane warning systems.')">
+            Crane warning systems
+        </div>
+
+        <div class="footer">
+            NIHARI AI<br>
+            Industrial RAG Assistant<br><br>
+            Powered by Hesham Knowledge Base
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+            <h2>NIHARI AI</h2>
+            <span>Industrial Assistant</span>
+        </header>
+
+        <section class="chat" id="chat">
+
+            <div class="chat-inner" id="chatInner">
+
+                <div class="welcome" id="welcome">
+
+                    <div class="welcome-logo">N</div>
+
+                    <h2>How can I help you?</h2>
+
+                    <p>
+                        Ask Nihari AI about industrial safety,
+                        forklift solutions, warning systems,
+                        products and technical information.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="input-area">
+
+            <div class="input-box">
+
+                <textarea
+                    id="input"
+                    rows="1"
+                    placeholder="Ask Nihari AI..."
+                ></textarea>
+
+                <button
+                    class="send"
+                    id="sendButton"
+                    onclick="sendMessage()"
+                >
+                    ↑
+                </button>
+
+            </div>
+
+            <div class="hint">
+                Nihari AI answers using the industrial knowledge base.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+const input = document.getElementById("input");
+const chat = document.getElementById("chat");
+const chatInner = document.getElementById("chatInner");
+const sendButton = document.getElementById("sendButton");
+
+let generating = false;
+
+
+// ENTER TO SEND
+input.addEventListener("keydown", function(event) {
+
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey
+    ) {
+        event.preventDefault();
+
+        if (!generating) {
+            sendMessage();
+        }
+    }
+});
+
+
+// AUTO RESIZE TEXTAREA
+input.addEventListener("input", function() {
+
+    this.style.height = "auto";
+
+    this.style.height =
+        Math.min(this.scrollHeight, 130) + "px";
+});
+
+
+// SUGGESTION
+function askSuggestion(question) {
+
+    if (generating) return;
+
+    input.value = question;
+
+    sendMessage();
+}
+
+
+// ADD MESSAGE
+function addMessage(role, text = "") {
+
+    const welcome =
+        document.getElementById("welcome");
+
+    if (welcome) {
+        welcome.remove();
+    }
+
+
+    const message =
+        document.createElement("div");
+
+    message.className = "message";
+
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar " +
+        (role === "user"
+            ? "user-avatar"
+            : "ai-avatar");
+
+    avatar.textContent =
+        role === "user"
+            ? "YOU"
+            : "N";
+
+
+    const content =
+        document.createElement("div");
+
+    content.className = "message-content";
+
+
+    const name =
+        document.createElement("div");
+
+    name.className = "name";
+
+    name.textContent =
+        role === "user"
+            ? "You"
+            : "Nihari AI";
+
+
+    const body =
+        document.createElement("div");
+
+    body.className = "text";
+
+    body.textContent = text;
+
+
+    content.appendChild(name);
+    content.appendChild(body);
+
+    message.appendChild(avatar);
+    message.appendChild(content);
+
+    chatInner.appendChild(message);
+
+    scrollBottom();
+
+    return body;
+}
+
+
+// SCROLL
+function scrollBottom() {
+
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+
+
+// SEND MESSAGE
+async function sendMessage() {
+
+    const question =
+        input.value.trim();
+
+    if (!question || generating) {
+        return;
+    }
+
+
+    generating = true;
+
+    sendButton.disabled = true;
+
+    input.value = "";
+    input.style.height = "auto";
+
+
+    // USER MESSAGE
+    addMessage(
+        "user",
+        question
+    );
+
+
+    // AI MESSAGE
+    const aiText =
+        addMessage(
+            "assistant",
+            ""
+        );
+
+
+    const cursor =
+        document.createElement("span");
+
+    cursor.className = "cursor";
+
+    aiText.appendChild(cursor);
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: question
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned " +
+                response.status
+            );
+        }
+
+
+        // STREAMING RESPONSE
+        if (
+            response.body &&
+            response.body.getReader
+        ) {
+
+            const reader =
+                response.body.getReader();
+
+            const decoder =
+                new TextDecoder();
+
+            let answer = "";
+
+
+            while (true) {
+
+                const {
+                    value,
+                    done
+                } = await reader.read();
+
+
+                if (done) {
+                    break;
+                }
+
+
+                const chunk =
+                    decoder.decode(
+                        value,
+                        { stream: true }
+                    );
+
+
+                answer += chunk;
+
+
+                aiText.textContent =
+                    answer;
+
+                aiText.appendChild(
+                    cursor
+                );
+
+                scrollBottom();
+            }
+
+
+            cursor.remove();
+
+        }
+
+        else {
+
+            const text =
+                await response.text();
+
+            aiText.textContent =
+                text;
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        aiText.textContent =
+            "Nihari AI could not connect to the server. " +
+            "Please try again.";
+    }
+
+    finally {
+
+        generating = false;
+
+        sendButton.disabled = false;
+
+        input.focus();
+
+        scrollBottom();
+    }
+}
+
+</script>
+
+</body>
+  </html>
