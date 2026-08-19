@@ -386,9 +386,11 @@ def chat():
             "Cache-Control": "no-cache, no-transform",
             "X-Accel-Buffering": "no",
         },
-    )
+    
 
-
+@app.route("/")
+def index():
+    return render_template("index.html")
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
